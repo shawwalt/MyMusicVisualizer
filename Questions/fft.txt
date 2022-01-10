@@ -1,0 +1,5 @@
+https://blog.csdn.net/enjoy_pascal/article/details/81478582
+fft解多项式
+https://zhuanlan.zhihu.com/p/19763358
+https://realpython.com/python-scipy-fft/
+python.scipy.fft使用
