@@ -22,6 +22,10 @@ class FileProcessor(object):
 class WavProcessor(FileProcessor):
     def __init__(self, path, filename):
         super().__init__(path, filename)
+        self.nchannels = -1
+        self.sampwidth = -1
+        self.framerate = -1
+        self.nframes = -1
         self.file_read()
 
     def file_read(self):

@@ -8,16 +8,27 @@ from fileprocess import WavProcessor
 
 import os
 import sys
+import re
 import time
 import numpy as np
 
 
 # 绘制音频动态图像的控件
 class MyPlotter(PlotWidget):
-    def __init__(self, x_range, y_range):
+    def __init__(self,
+                 x_range,
+                 y_range,
+                 parent=None,
+                 background='default',
+                 plotItem=None,
+                 **kargs):
+        super().__init__(parent=parent,
+                         background=background,
+                         plotItem=plotItem,
+                         **kargs)
         self.x_range = x_range
         self.y_range = y_range
-    
+
     # 设置控件x,y轴的数据
     def line_plot(self, x_data, y_data):
         self.plot(x_data, y_data)
@@ -31,6 +42,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         self.cur_song = ''  # 当前加载歌曲名
         self.cur_song_list = []  # 当前文件目录中的歌曲列表
         self.is_pause = True  # 标记播放状态
+        self.wav_processor = WavProcessor('', '')
         self.setupUi(self)
         self.initialize()
 
@@ -54,7 +66,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         # 设置控件绑定
         self.pb_open_file_dir.clicked.connect(
             lambda: self.pb_open_file_clicked())
-        
+
         # 为防止拖动进度条时由于音频仍在播放而产生噪音，先暂停播放
         # 然后在松开控件是继续当前位置播放
         # 因此利用了三个信号
@@ -103,6 +115,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         for path, d, files in g:
             for filename in files:
                 file = path + '/' + filename
+                file = file.replace('\\', '/')
                 if 'wav' in file:
                     list.append(file)
                 if 'mp3' in file:
